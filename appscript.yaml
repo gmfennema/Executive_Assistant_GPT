@@ -104,5 +104,109 @@ paths:
                 - "path"
                 - "updateType"
       deprecated: false
+  "/exec?operation=createEvent":
+    post:
+      description: "Create a new event in Google Calendar"
+      operationId: "createEvent"
+      parameters:
+        - name: "securityKey"
+          in: "query"
+          description: "Security key for authentication"
+          required: true
+          schema:
+            type: "string"
+      requestBody:
+        description: "Request body for creating a new event"
+        required: true
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties:
+                title:
+                  type: "string"
+                  description: "Title of the event"
+                startDateTime:
+                  type: "string"
+                  description: "Start date and time in 'MMMM D, YYYY HH:mm:ss' format, e.g., 'January 1, 2024 20:00:00'"
+                endDateTime:
+                  type: "string"
+                  description: "End date and time in 'MMMM D, YYYY HH:mm:ss' format, e.g., 'January 1, 2024 21:00:00'"
+                isAllDay:
+                  type: "boolean"
+                  description: "Set to true for all-day events, false for specific time events"
+                description:
+                  type: "string"
+                  description: "Description or details of the event (optional)"
+                invitees:
+                  type: "array"
+                  items:
+                    type: "string"
+                  description: "Array of email addresses of invitees (optional)"
+      deprecated: false
+  "/exec?operation=viewEvents":
+    post:
+      description: "See all events in a specified timeframe for your Google Calendar"
+      operationId: "viewEvents"
+      parameters:
+        - name: "securityKey"
+          in: "query"
+          description: "Security key for authentication"
+          required: true
+          schema:
+            type: "string"
+      requestBody:
+        description: "Request body for viewing events with start and end date filters"
+        required: true
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties:
+                startDateTime:
+                  type: "string"
+                  description: "Start datetime filter date and time in 'MMMM D, YYYY HH:mm:ss' format, e.g., 'January 1, 2024 20:00:00'"
+                endDateTime:
+                  type: "string"
+                  description: "End datetime filter date and time in 'MMMM D, YYYY HH:mm:ss' format, e.g., 'January 1, 2024 21:00:00'"
+      deprecated: false
+  "/exec?operation=modifyEvent":
+    post:
+      description: "Updates existing calendar events using an event ID"
+      operationId: "modifyEvent"
+      parameters:
+        - name: "securityKey"
+          in: "query"
+          description: "Security key for authentication"
+          required: true
+          schema:
+            type: "string"
+      requestBody:
+        description: "Request body for updating and existing event"
+        required: true
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties:
+                eventId:
+                  type: "string"
+                  description: "The ID of the event which can be found using the getEvents call"
+                title:
+                  type: "string"
+                  description: "Title of the event (optional)"
+                startDateTime:
+                  type: "string"
+                  description: "Updated the start date and time in 'MMMM D, YYYY HH:mm:ss' format, e.g., 'January 1, 2024 20:00:00' (if modifying date/time, must include both new start and end times)"
+                endDateTime:
+                  type: "string"
+                  description: "Updates the end date and time in 'MMMM D, YYYY HH:mm:ss' format, e.g., 'January 1, 2024 21:00:00' (if modifying date/time, must include both new start and end times)"
+                description:
+                  type: "string"
+                  description: "Updates the description or details of the event (optional)"
+                deleteEvent:
+                  type: "boolean"
+                  description: "If true, deletes the event (optional)"
+      deprecated: false
 components:
   schemas: {}
