@@ -1,4 +1,4 @@
-var securityKey = '[YOUR SECURITY KEY]';
+var securityKey = "[YOUR SECURITY KEY]";
 
 function doGet(e) {
   var operation = e.parameter.operation;
@@ -8,16 +8,20 @@ function doGet(e) {
 
   // Check if the provided security key matches the expected security key
   if (providedKey !== securityKey) {
-    return ContentService.createTextOutput('Invalid security key').setMimeType(ContentService.MimeType.TEXT);
+    return ContentService.createTextOutput("Invalid security key").setMimeType(
+      ContentService.MimeType.TEXT
+    );
   }
 
   switch (operation) {
-    case 'getPeople':
+    case "getPeople":
       return getPeople();
-    case 'getPerson':
+    case "getPerson":
       return getPerson(name);
     default:
-      return ContentService.createTextOutput('Invalid operation').setMimeType(ContentService.MimeType.TEXT);
+      return ContentService.createTextOutput("Invalid operation").setMimeType(
+        ContentService.MimeType.TEXT
+      );
   }
 }
 
@@ -29,42 +33,53 @@ function doPost(e) {
 
   // Check if the provided security key matches the expected security key
   if (providedKey !== securityKey) {
-    return ContentService.createTextOutput('Invalid security key').setMimeType(ContentService.MimeType.TEXT);
+    return ContentService.createTextOutput("Invalid security key").setMimeType(
+      ContentService.MimeType.TEXT
+    );
   }
 
   switch (operation) {
-    case 'createProfile':
+    case "createProfile":
       return createProfile(name);
-    case 'updateProfile':
-      var value = requestBody.value
-      var path = requestBody.path
-      var updateType = requestBody.updateType
+    case "updateProfile":
+      var value = requestBody.value;
+      var path = requestBody.path;
+      var updateType = requestBody.updateType;
       return updateProfile(name, value, path, updateType);
     default:
-      return ContentService.createTextOutput('Invalid operation').setMimeType(ContentService.MimeType.TEXT);
+      return ContentService.createTextOutput("Invalid operation").setMimeType(
+        ContentService.MimeType.TEXT
+      );
   }
 }
-
 
 function getPeople() {
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
   var data = sheet.getDataRange().getValues();
-  var people = data.map(function(row) { return row[0]; }); // Assuming names are in the first column
-  return ContentService.createTextOutput(JSON.stringify(people)).setMimeType(ContentService.MimeType.JSON);
+  var people = data.map(function (row) {
+    return row[0];
+  }); // Assuming names are in the first column
+  return ContentService.createTextOutput(JSON.stringify(people)).setMimeType(
+    ContentService.MimeType.JSON
+  );
 }
 
 function getPerson(name) {
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
   var data = sheet.getDataRange().getValues();
   for (var i = 0; i < data.length; i++) {
-    if (data[i][0] === name) { // Assuming names are in the first column
+    if (data[i][0] === name) {
+      // Assuming names are in the first column
       var personData = JSON.parse(data[i][1]); // Assuming JSON data is in the second column
-      return ContentService.createTextOutput(JSON.stringify(personData)).setMimeType(ContentService.MimeType.JSON);
+      return ContentService.createTextOutput(
+        JSON.stringify(personData)
+      ).setMimeType(ContentService.MimeType.JSON);
     }
   }
-  return ContentService.createTextOutput('Person not found').setMimeType(ContentService.MimeType.TEXT);
+  return ContentService.createTextOutput("Person not found").setMimeType(
+    ContentService.MimeType.TEXT
+  );
 }
-
 
 function updateExistingValue(personData, path, newValue) {
   var pathParts = path.split(".");
@@ -99,7 +114,11 @@ function updateExistingValue(personData, path, newValue) {
   if (lastArrayMatch) {
     var key = lastArrayMatch[1];
     var index = parseInt(lastArrayMatch[2]);
-    if (!current[key] || !Array.isArray(current[key]) || index >= current[key].length) {
+    if (
+      !current[key] ||
+      !Array.isArray(current[key]) ||
+      index >= current[key].length
+    ) {
       throw new Error("Path not found, not an array, or index out of bounds");
     }
     current[key][index] = newValue;
@@ -109,8 +128,6 @@ function updateExistingValue(personData, path, newValue) {
 
   return personData;
 }
-
-
 
 function addStringToArray(personData, path, stringValue) {
   var pathParts = path.split(".");
@@ -156,29 +173,28 @@ function addStringToArray(personData, path, stringValue) {
   return personData;
 }
 
-
-
 function updateProfile(name, value, path, updateType) {
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
   var data = sheet.getDataRange().getValues();
-  var rowIndex = data.findIndex(row => row[0] === name);
+  var rowIndex = data.findIndex((row) => row[0] === name);
 
   if (rowIndex === -1) {
-    return ContentService.createTextOutput('Profile not found').setMimeType(ContentService.MimeType.TEXT);
+    return ContentService.createTextOutput("Profile not found").setMimeType(
+      ContentService.MimeType.TEXT
+    );
   }
 
   var personData = JSON.parse(data[rowIndex][1]);
   try {
     var parsedValue;
     try {
-        // Attempt to parse the value as JSON
-        parsedValue = JSON.parse(value);
-      } catch (e) {
-        // If it fails, treat it as a plain string
-        parsedValue = value;
-      }
+      // Attempt to parse the value as JSON
+      parsedValue = JSON.parse(value);
+    } catch (e) {
+      // If it fails, treat it as a plain string
+      parsedValue = value;
+    }
     if (updateType === "overwrite") {
-
       personData = updateExistingValue(personData, path, parsedValue);
     } else if (updateType === "append") {
       personData = addStringToArray(personData, path, value);
@@ -187,26 +203,29 @@ function updateProfile(name, value, path, updateType) {
     }
   } catch (error) {
     // Handle errors
-    return ContentService.createTextOutput('Error: ' + error.message).setMimeType(ContentService.MimeType.TEXT);
+    return ContentService.createTextOutput(
+      "Error: " + error.message
+    ).setMimeType(ContentService.MimeType.TEXT);
   }
 
   var template = JSON.parse(sheet.getRange("B1").getValue());
 
-  syncObjects(template, personData)
+  syncObjects(template, personData);
 
   sheet.getRange(rowIndex + 1, 2).setValue(JSON.stringify(personData));
-  return ContentService.createTextOutput('Profile updated').setMimeType(ContentService.MimeType.TEXT);
+  return ContentService.createTextOutput("Profile updated").setMimeType(
+    ContentService.MimeType.TEXT
+  );
 }
-
-
 
 function createProfile(name) {
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
   var template = sheet.getRange("B1").getValue();
   sheet.appendRow([name, template]);
-  return ContentService.createTextOutput('Person added').setMimeType(ContentService.MimeType.TEXT);
+  return ContentService.createTextOutput("Person added").setMimeType(
+    ContentService.MimeType.TEXT
+  );
 }
-
 
 function getNestedJsonValue(cell, key) {
   var jsonData = JSON.parse(cell);
@@ -214,7 +233,7 @@ function getNestedJsonValue(cell, key) {
 }
 
 function searchKey(obj, keyToFind) {
-  if (typeof obj !== 'object' || obj === null) {
+  if (typeof obj !== "object" || obj === null) {
     return null;
   }
 
@@ -234,7 +253,6 @@ function searchKey(obj, keyToFind) {
   return null;
 }
 
-
 /**
  * Synchronize two JSON objects by adding missing keys and keeping only the first element of arrays.
  *
@@ -249,16 +267,16 @@ function searchKey(obj, keyToFind) {
  */
 function syncObjects(newObj, oldObj) {
   for (var key in newObj) {
-    if (typeof newObj[key] === 'object' && newObj[key] !== null) {
+    if (typeof newObj[key] === "object" && newObj[key] !== null) {
       if (Array.isArray(newObj[key])) {
         // If it's an array, create an empty array in oldObj
         oldObj[key] = oldObj[key] || [];
-        
+
         // Ensure the length of the old array matches the length of the new array
         while (oldObj[key].length < newObj[key].length) {
           oldObj[key].push({});
         }
-        
+
         // Recursively sync the arrays
         for (var i = 0; i < newObj[key].length; i++) {
           oldObj[key][i] = syncObjects(newObj[key][i], oldObj[key][i]);
@@ -274,5 +292,3 @@ function syncObjects(newObj, oldObj) {
   }
   return oldObj;
 }
-
-
