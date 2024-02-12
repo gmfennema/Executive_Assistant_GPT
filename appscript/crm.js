@@ -1,64 +1,9 @@
-var securityKey = "[YOUR SECURITY KEY]";
-
-function doGet(e) {
-  var operation = e.parameter.operation;
-  var name = e.parameter.name;
-  var data = e.parameter.data;
-  var providedKey = e.parameter.securityKey; // Get the security key from the request
-
-  // Check if the provided security key matches the expected security key
-  if (providedKey !== securityKey) {
-    return ContentService.createTextOutput("Invalid security key").setMimeType(
-      ContentService.MimeType.TEXT
-    );
-  }
-
-  switch (operation) {
-    case "getPeople":
-      return getPeople();
-    case "getPerson":
-      return getPerson(name);
-    default:
-      return ContentService.createTextOutput("Invalid operation").setMimeType(
-        ContentService.MimeType.TEXT
-      );
-  }
-}
-
-function doPost(e) {
-  var operation = e.parameter.operation;
-  var name = e.parameter.name;
-  var requestBody = JSON.parse(e.postData.contents);
-  var providedKey = e.parameter.securityKey; // Get the security key from the request
-
-  // Check if the provided security key matches the expected security key
-  if (providedKey !== securityKey) {
-    return ContentService.createTextOutput("Invalid security key").setMimeType(
-      ContentService.MimeType.TEXT
-    );
-  }
-
-  switch (operation) {
-    case "createProfile":
-      return createProfile(name);
-    case "updateProfile":
-      var value = requestBody.value;
-      var path = requestBody.path;
-      var updateType = requestBody.updateType;
-      return updateProfile(name, value, path, updateType);
-    default:
-      return ContentService.createTextOutput("Invalid operation").setMimeType(
-        ContentService.MimeType.TEXT
-      );
-  }
-}
-
 function getPeople() {
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
   var data = sheet.getDataRange().getValues();
   var people = data.map(function (row) {
     return row[0];
-  }); // Assuming names are in the first column
+  });
   return ContentService.createTextOutput(JSON.stringify(people)).setMimeType(
     ContentService.MimeType.JSON
   );
@@ -69,8 +14,7 @@ function getPerson(name) {
   var data = sheet.getDataRange().getValues();
   for (var i = 0; i < data.length; i++) {
     if (data[i][0] === name) {
-      // Assuming names are in the first column
-      var personData = JSON.parse(data[i][1]); // Assuming JSON data is in the second column
+      var personData = JSON.parse(data[i][1]);
       return ContentService.createTextOutput(
         JSON.stringify(personData)
       ).setMimeType(ContentService.MimeType.JSON);
@@ -87,7 +31,7 @@ function updateExistingValue(personData, path, newValue) {
 
   for (var i = 0; i < pathParts.length - 1; i++) {
     var part = pathParts[i];
-    var arrayMatch = part.match(/(\w+)\[(\d+)\]/); // Match array elements
+    var arrayMatch = part.match(/(\w+)\[(\d+)\]/);
 
     if (arrayMatch) {
       var key = arrayMatch[1];
@@ -99,7 +43,7 @@ function updateExistingValue(personData, path, newValue) {
         throw new Error("Array index out of bounds");
       }
       current = current[key];
-      part = index; // Set part to the array index
+      part = index;
     } else {
       if (!current[part]) {
         throw new Error("Path not found");
@@ -109,7 +53,7 @@ function updateExistingValue(personData, path, newValue) {
   }
 
   var lastPart = pathParts[pathParts.length - 1];
-  var lastArrayMatch = lastPart.match(/(\w+)\[(\d+)\]/); // Check if the last part is also an array element
+  var lastArrayMatch = lastPart.match(/(\w+)\[(\d+)\]/);
 
   if (lastArrayMatch) {
     var key = lastArrayMatch[1];
@@ -124,50 +68,6 @@ function updateExistingValue(personData, path, newValue) {
     current[key][index] = newValue;
   } else {
     current[lastPart] = newValue;
-  }
-
-  return personData;
-}
-
-function addStringToArray(personData, path, stringValue) {
-  var pathParts = path.split(".");
-  var current = personData;
-
-  for (var i = 0; i < pathParts.length; i++) {
-    var part = pathParts[i];
-    var arrayMatch = part.match(/(\w+)\[(\d+)\]/);
-
-    if (arrayMatch) {
-      var key = arrayMatch[1];
-      var index = parseInt(arrayMatch[2]);
-      if (!current[key] || !current[key][index]) {
-        throw new Error("Path not found");
-      }
-      current = current[key][index];
-    } else {
-      if (i === pathParts.length - 1) {
-        // This is the last part of the path, where the array should be
-        if (!current[part]) {
-          current[part] = []; // Initialize as an empty array if it doesn't exist
-        }
-        if (!Array.isArray(current[part])) {
-          throw new Error("Target is not an array");
-        }
-        // Parse the string as JSON and append to the array
-        try {
-          var jsonValue = JSON.parse(stringValue);
-          current[part].push(jsonValue);
-        } catch (e) {
-          // If parsing fails, append as a plain string
-          current[part].push(stringValue);
-        }
-        break;
-      }
-      if (!current[part]) {
-        throw new Error("Path not found");
-      }
-      current = current[part];
-    }
   }
 
   return personData;
@@ -188,10 +88,8 @@ function updateProfile(name, value, path, updateType) {
   try {
     var parsedValue;
     try {
-      // Attempt to parse the value as JSON
       parsedValue = JSON.parse(value);
     } catch (e) {
-      // If it fails, treat it as a plain string
       parsedValue = value;
     }
     if (updateType === "overwrite") {
@@ -202,7 +100,6 @@ function updateProfile(name, value, path, updateType) {
       throw new Error("Invalid update type");
     }
   } catch (error) {
-    // Handle errors
     return ContentService.createTextOutput(
       "Error: " + error.message
     ).setMimeType(ContentService.MimeType.TEXT);
@@ -253,18 +150,47 @@ function searchKey(obj, keyToFind) {
   return null;
 }
 
-/**
- * Synchronize two JSON objects by adding missing keys and keeping only the first element of arrays.
- *
- * This function takes two JSON objects, `newObj` and `oldObj`, and synchronizes them by:
- * 1. Adding missing keys from `newObj` to `oldObj` with empty string values.
- * 2. For arrays in `newObj`, it keeps only the first element and adds it to `oldObj`.
- * 3. Recursively syncs nested objects.
- *
- * @param {Object} newObj - The JSON object containing new data.
- * @param {Object} oldObj - The JSON object to be updated with missing keys.
- * @returns {Object} The synchronized `oldObj` with missing keys and updated arrays.
- */
+function addStringToArray(personData, path, stringValue) {
+  var pathParts = path.split(".");
+  var current = personData;
+
+  for (var i = 0; i < pathParts.length; i++) {
+    var part = pathParts[i];
+    var arrayMatch = part.match(/(\w+)\[(\d+)\]/);
+
+    if (arrayMatch) {
+      var key = arrayMatch[1];
+      var index = parseInt(arrayMatch[2]);
+      if (!current[key] || !current[key][index]) {
+        throw new Error("Path not found");
+      }
+      current = current[key][index];
+    } else {
+      if (i === pathParts.length - 1) {
+        if (!current[part]) {
+          current[part] = [];
+        }
+        if (!Array.isArray(current[part])) {
+          throw new Error("Target is not an array");
+        }
+        try {
+          var jsonValue = JSON.parse(stringValue);
+          current[part].push(jsonValue);
+        } catch (e) {
+          current[part].push(stringValue);
+        }
+        break;
+      }
+      if (!current[part]) {
+        throw new Error("Path not found");
+      }
+      current = current[part];
+    }
+  }
+
+  return personData;
+}
+
 function syncObjects(newObj, oldObj) {
   for (var key in newObj) {
     if (typeof newObj[key] === "object" && newObj[key] !== null) {
