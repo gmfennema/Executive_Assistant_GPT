@@ -26,11 +26,11 @@ function handleRequest(e) {
       ContentService.MimeType.TEXT
     );
   }
+
   switch (operation) {
     /* ------- PERSONAL CRM FUNCTIONALITY --------*/
     case "getPeople":
-      var peopleNames = getPeople();
-      return ContentService.createTextOutput(String(peopleNames)).setMimeType(ContentService.MimeType.TEXT);
+      return getPeople();
     case "getPerson":
       return getPerson(e.parameter.name);
     case "createProfile":
@@ -47,35 +47,39 @@ function handleRequest(e) {
     case "viewEvents":
       return viewEvents(requestBody.startDateTime, requestBody.endDateTime);
     case "createEvent":
-      var title = requestBody.title || null;
-      var startDateTime = requestBody.startDateTime || null;
-      var endDateTime = requestBody.endDateTime || null;
-      var isAllDay = requestBody.isAllDay || false;
-      var description = requestBody.description || null;
-      var invitees = requestBody.invitees || null;
       return createEvent(
-        title,
-        startDateTime,
-        endDateTime,
-        isAllDay,
-        description,
-        invitees
+        title=requestBody.title || null,
+        startDateTime=requestBody.startDateTime || null,
+        endDateTime=requestBody.endDateTime || null,
+        isAllDay=requestBody.isAllDay || false,
+        description=requestBody.description || null,
+        invitees=requestBody.invitees || null
       );
     case "modifyEvent":
-      var title = requestBody.title || null;
-      var startDateTime = requestBody.startDateTime || null;
-      var endDateTime = requestBody.endDateTime || null;
-      var isAllDay = requestBody.isAllDay || false;
-      var description = requestBody.description || null;
-      var deleteEvent = requestBody.deleteEvent || false;
       return modifyEvent(
         requestBody.eventId,
-        title,
-        startDateTime,
-        endDateTime,
-        description,
-        deleteEvent
+        title = requestBody.title || null,
+        startDateTime = requestBody.startDateTime || null,
+        endDateTime = requestBody.endDateTime || null,
+        isAllDay = requestBody.isAllDay || false,
+        description = requestBody.description || null,
+        deleteEvent = requestBody.deleteEvent || false
       );
+
+    /* ------- GMAIL FUNCTIONALITY --------*/
+    case "getEmails":
+      return getEmails(
+        minDate = requestBody.minDate,
+        isUnread = requestBody.isUnread || null,
+        isInInbox = requestBody.isInInbox || null
+      );
+    case "updateEmails":
+      return updateEmails(
+        emailIds = requestBody.emailIds || [],
+        markAsRead = requestBody.markAsRead || null,
+        archive = requestBody.archive || null,
+        moveToInbox = requestBody.moveToInbox || null
+        );
     default:
       return ContentService.createTextOutput("Invalid operation").setMimeType(
         ContentService.MimeType.TEXT
