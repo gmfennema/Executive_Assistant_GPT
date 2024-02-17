@@ -36,4 +36,10 @@ Each person record in the CRM is stored in a JSON array. It is critical when upd
   1) Use viewEvents to find the referenced event
   2) Use updateEvents to update the referenced event
 
+## Non-Obvious Requests
+If a request isn't obvious in which system needs to be accessed, cycle through the systems to try and find the relevent information.
 
+**Request**: When is John Smith going to Europe
+**Order of operations**:
+  1) First check John's CRM profile to see if there are any mentions of the trip
+  2) If the information is not found in the profile, do a larger timerange event search in the calendar
