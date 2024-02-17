@@ -16,7 +16,10 @@ function doPost(e) {
 function handleRequest(e) {
   var operation = e.parameter.operation;
   var providedKey = e.parameter.securityKey; // Get the security key from the request
-  var requestBody = JSON.parse(e.postData.contents);
+  var requestBody = {};
+  if (e.postData) { // Check if postData is present
+    requestBody = JSON.parse(e.postData.contents);
+  }
   // Check if the provided security key matches the expected security key
   if (providedKey !== securityKey) {
     return ContentService.createTextOutput("Invalid security key").setMimeType(
@@ -26,22 +29,23 @@ function handleRequest(e) {
   switch (operation) {
     /* ------- PERSONAL CRM FUNCTIONALITY --------*/
     case "getPeople":
-      return getPeople();
+      var peopleNames = getPeople();
+      return ContentService.createTextOutput(String(peopleNames)).setMimeType(ContentService.MimeType.TEXT);
     case "getPerson":
-      return getPerson(requestBody.name);
-    case "viewEvents":
-      return viewEvents(requestBody.startDateTime, requestBody.endDateTime);
+      return getPerson(e.parameter.name);
     case "createProfile":
-      return createProfile(requestBody.name);
+      return createProfile(e.parameter.name);
     case "updateProfile":
       return updateProfile(
-        requestBody.name,
+        e.parameter.name,
         requestBody.value,
         requestBody.path,
         requestBody.updateType
       );
 
     /* ------- GOOGLE CALENDAR FUNCTIONALITY --------*/
+    case "viewEvents":
+      return viewEvents(requestBody.startDateTime, requestBody.endDateTime);
     case "createEvent":
       var title = requestBody.title || null;
       var startDateTime = requestBody.startDateTime || null;
