@@ -290,5 +290,61 @@ paths:
               required:
                 - emailIds
       deprecated: false
+  /exec?operation=draftReply:
+    post:
+      description: Creates a draft reply to an email
+      operationId: draftReply
+      parameters:
+        - name: securityKey
+          in: query
+          description: Security key for authentication
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Relevent information for the draft response
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                emailId:
+                  type: string
+                  description: The ID of the email to create a response draft for
+                draftContent:
+                  type: string
+                  description: The content of the drafted reply
+                replyAll:
+                  type: boolean
+                  descrition: If true, will reply all, else will reply to the sender only
+              required:
+                - emailId
+      deprecated: false
+  /exec?operation=getEmailContext:
+    post:
+      description: Retrieves the email content for the entire email thread
+      operationId: getEmailContext
+      parameters:
+        - name: securityKey
+          in: query
+          description: Security key for authentication
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Which email should be investigated
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                emailId:
+                  type: string
+                  description: The ID of the email get context for
+              required:
+                - emailId
+      deprecated: false
 components:
   schemas: {}

@@ -3,7 +3,6 @@ function getEmails(minDate, isUnread, isInInbox) {
       isUnread = true;
     }
     var inbox = GmailApp.getInboxThreads();
-  
     var minDateFormatted = new Date(minDate)
     // Filter threads based on the minimum date
     if (minDateFormatted) {
@@ -43,7 +42,6 @@ function getEmails(minDate, isUnread, isInInbox) {
           inInbox: inInbox,
           inPriorityInbox: inPriorityInbox
         };
-  
         emailData.push(emailInfo);
       }
     }
@@ -70,6 +68,64 @@ function getEmails(minDate, isUnread, isInInbox) {
     });
     ContentService.createTextOutput("Updated Successfully").setMimeType(ContentService.MimeType.TEXT);
   }
+  
+  // Function to create a draft reply to a specific email
+  function draftReply(emailId, draftContent, replyAll) {
+    var email = GmailApp.getMessageById(emailId);
+    var draft;
+    
+    // Determine if it's a reply or a reply all
+    if (replyAll) {
+      draft = email.createDraftReplyAll(draftContent);
+    } else {
+      draft = email.createDraftReply(draftContent);
+    }
+    
+    // Update the draft content
+    // draft.setContent(draftContent);
+    var draftId = draft.getId()
+    var draftLink = "https://mail.google.com/mail/u/0/#drafts?compose="+draftId
+    
+    // Return draft ID and content
+    var draft_response = {draftId: draftId, draftLink: draftLink, draftContent: draftContent}
+    return ContentService.createTextOutput(JSON.stringify(draft_response))
+  }
+  
+  // Function to get the context of a specific email
+  function getEmailContext(emailId) {
+    var email = GmailApp.getMessageById(emailId);
+    var threadId = email.getThread().getId();
+    var allEmails = [];
+    
+    // Retrieve all emails in the thread
+    var threadEmails = GmailApp.getThreadById(threadId).getMessages();
+    
+    // Loop through each email in the thread
+    for (var i = 0; i < threadEmails.length; i++) {
+      var currentEmail = threadEmails[i];
+      var emailContent = currentEmail.getPlainBody(); // You can change this to get HTML body if needed
+      var sender = currentEmail.getFrom();
+      var ccRecipients = currentEmail.getCc();
+      var subject = currentEmail.getSubject();
+      
+      // Store email details in an object
+      var emailDetails = {
+        emailId: currentEmail.getId(),
+        emailContent: cleanEmailContent(emailContent),
+        sender: sender,
+        ccRecipients: ccRecipients,
+        subject: subject
+      };
+      
+      // Push email details to the allEmails array
+      allEmails.push(emailDetails);
+    }
+    
+    // Return thread ID and all emails
+    var emailContextResponse = {thread_id: threadId, allEmails: allEmails};
+    return ContentService.createTextOutput(JSON.stringify(emailContextResponse))  
+  }
+  
   
   
   /* ------------------HELPER FUNCTIONS------------------------- */
