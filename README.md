@@ -1,34 +1,51 @@
-# Custom GPT Google Sheets Storage & Retrieval
-Use Google Sheets to store persistant information across custom GPT conversations
+# Google Workspace Executive Assistant GPT
+This project gives a custom GPT the ability to interact with your Google Workspace Apps, essentially functioning as your executive assitant. It can currently do the following upon user request:
 
-## Use Cases
+## Current Functionality
+**Gmail**:
+  - Access your inbox
+  - Summarize email threads
+  - Genrate reply drafts
+  - Mark emails as read/unread and archive them
 
-### Personal CRM
-Create customized profiles for your contacts and access all the information in a conversational manner with your CRM GPT
+**Google Calendar**:
+  - View your current schedule
+  - Create new events
+  - Update existing events
 
-#### Demo
-##### Store Information
-While this demo shows creating a profile and then adding information to it, GPT can handle mutiple types of instructions (Create, Add, Update, Retrieve)
+**Personal CRM (Google Sheets)**:
+  - View all contacts
+  - Read profiles details
+  - Create new profiles
+  - Update profiles
 
-[MOV to WEBM conversion (1).webm](https://github.com/gmfennema/CustomGPT-Google-Sheets-RAG/assets/38080470/b467d17e-f7d8-4b30-9c3a-a8b2d8732f16)
+## Example Use Cases
 
-##### Retrieve Information
-[MOV to WEBM conversion.webm](https://github.com/gmfennema/CustomGPT-Google-Sheets-RAG/assets/38080470/0c78ce7a-896e-48da-b870-67c91bf6ca3b)
+1) Email Triage
+    - Give me a quick summary of new emails I recieved today
+    - Archive anything that doesn't require a response
+    - Create 5 minute time slots on my calendar starting at 4pm to respond to anything that requires a response.
+    - Link those emails in the events descriptions and then archive them
 
+2) Remember Anything
+    - Tom's birthday is April 20th
+    - Update his CRM profile
+    - Add it as an all-dey event to my calendar
 
-#### Setup Instructions
-1. Create your custom GPT and insert the instructions from the markdown file
-2. Set a security key that you will use later and update the instructions with your security key
-3. Create a new Google Sheet and paste the Appscript code (you may need to run a function to approve permissions)
-4. Paste your security key in the appscript code
-5. Publish your code as a public webapp and copy the public url
-6. Paste the YAML into the custom GPT action along with the webapp url
-7. Setup your Google Sheet with the following fields:
-  -  A1 = *Template*
-  -  B1 = *{"PersonalInformation":{"FirstName":"","LastName":"","BirthDetails":{"Birthday":"","BirthYear":"","BirthLocation":""},"CurrentLocation":"","FamilyMembers":[{"Name":"","Relationship":"","Occupation":"","CurrentLocation":"","OtherDetails":""}],"ContactDetails":{"WorkEmail":"","PersonalEmail":"","Phone":"","Website":"","Address":""},"InterestsAndHobbies":{"Books":[{"Title":"","Author":""}],"Movies_TVShows":[],"HobbiesAndInterests":[]},"SpecialConsiderations":{"PersonalityTests":{"LoveLanguage":"","StrengthsFinders":"","Eniagram":"","MyerBriggs":""},"GiftIdeas":[],"DietaryPreferences":[],"OtherPreferences":[]},"KeyLifeEvents":[{"EventName":"","EventDescription":"","TimeFrame":""}],"GoalsAndDreams":[],"Skills":[],"Religion":"","PoliticalViews":"","InspirationalFigures":"","FunFacts":""},"ProfessionalInformation":{"WorkHistory":[{"JobTitle":"","CompanyName":"","IsCurrentPosition":"","RoleDescription":"","StartDate":"","EndDate":""}],"Education":[{"SchoolName":"","SchoolLocation":"","Degree":"","DegreeDate":""}]},"Interactions":{"Recommendations":{"Books":[],"Movies":[],"TVShows":[],"Other":[]},"ItemsToFollowUpOn":[],"GiftsRecieved":[],"SummaryOfLastInteraction":"","MemorableQuotes":""}}*
+3) Extract Key Details
+    - Read Tom's Christmas update email he sent 1 month ago
+    - Extract all personal details
+    - Update his CRM profile with relevent information
 
-### Personal Notetaker
-_Coming Soon_
+4) Speedy Response
+    - Summarize the long email chain from Tom
+    - Draft an encouraging response and give me the link
 
-### Personal Research Assistant
-_Coming Soon_
+## Install Instructions
+
+1) Make a copy of this template
+2) Access the Apps Script code Extensions > Apps Script
+3) Update the values on the `API Handler.gs` file
+4) Deploy > New Deployment | Execute as Me | Anyone has access
+5) Paste Instructions and YAML into your own custom GPT
+6) Update security key to match App Script
