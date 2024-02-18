@@ -43,7 +43,7 @@ This project gives a custom GPT the ability to interact with your Google Workspa
 
 ## Install Instructions
 
-1) Make a copy of this template
+1) Make a copy of this [template](https://docs.google.com/spreadsheets/d/1KheU2VmuqmDsuuvq2kkn1AQuIQih-NKwP4j_WsfPBnM/template/preview)
 2) Access the Apps Script code Extensions > Apps Script
 3) Update the values on the `API Handler.gs` file
 4) Deploy > New Deployment | Execute as Me | Anyone has access
