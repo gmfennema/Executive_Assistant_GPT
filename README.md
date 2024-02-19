@@ -1,11 +1,14 @@
 # Google Workspace Executive Assistant GPT
-This project gives a custom GPT the ability to interact with your Google Workspace Apps, essentially functioning as your executive assitant. It can currently do the following upon user request:
+This project gives a custom GPT the ability to interact with your Google Workspace Apps, essentially functioning as your executive assistant. It can currently do the following upon user request:
+
+<img src="https://github.com/gmfennema/Executive_Assistant_GPT/assets/38080470/3f645195-b577-4e3d-9600-797f68aa816e" style="width: 600px" >
+
 
 ## Current Functionality
 **Gmail**:
   - Access your inbox
   - Summarize email threads
-  - Genrate reply drafts
+  - Generate reply drafts
   - Mark emails as read/unread and archive them
 
 **Google Calendar**:
@@ -15,27 +18,27 @@ This project gives a custom GPT the ability to interact with your Google Workspa
 
 **Personal CRM (Google Sheets)**:
   - View all contacts
-  - Read profiles details
+  - Read profile details
   - Create new profiles
   - Update profiles
 
 ## Example Use Cases
 
 1) Email Triage
-    - Give me a quick summary of new emails I recieved today
+    - Give me a quick summary of new emails I received today
     - Archive anything that doesn't require a response
-    - Create 5 minute time slots on my calendar starting at 4pm to respond to anything that requires a response.
-    - Link those emails in the events descriptions and then archive them
+    - Create 5-minute time slots on my calendar starting at 4 pm to respond to anything that requires a response.
+    - Link those emails in the event descriptions and then archive them
 
 2) Remember Anything
     - Tom's birthday is April 20th
     - Update his CRM profile
-    - Add it as an all-dey event to my calendar
+    - Add it as an all-day event to my calendar
 
 3) Extract Key Details
     - Read Tom's Christmas update email he sent 1 month ago
     - Extract all personal details
-    - Update his CRM profile with relevent information
+    - Update his CRM profile with relevant information
 
 4) Speedy Response
     - Summarize the long email chain from Tom
