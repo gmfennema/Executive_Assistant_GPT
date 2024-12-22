@@ -346,5 +346,122 @@ paths:
               required:
                 - emailId
       deprecated: false
+  /exec?operation=getFolderStructure:
+    get:
+      description: Fetches folder structure with folder names and IDs only.
+      operationId: getFolderStructure
+      parameters:
+        - name: securityKey
+          in: query
+          description: Security key for authentication
+          required: true
+          schema:
+            type: string
+        - name: folderId
+          in: query
+          description: The ID of the folder to fetch structure for
+          required: true
+          schema:
+            type: string
+      deprecated: false
+
+  /exec?operation=fuzzySearchFiles:
+    get:
+      description: Searches files by name (fuzzy) and returns paths.
+      operationId: fuzzySearchFiles
+      parameters:
+        - name: securityKey
+          in: query
+          description: Security key for authentication
+          required: true
+          schema:
+            type: string
+        - name: folderId
+          in: query
+          description: The ID of the folder to search in
+          required: true
+          schema:
+            type: string
+        - name: searchTerm
+          in: query
+          description: Search term to find files
+          required: true
+          schema:
+            type: string
+      deprecated: false
+
+  /exec?operation=previewFolderContents:
+    get:
+      description: Retrieves the first 10 files in a folder.
+      operationId: previewFolderContents
+      parameters:
+        - name: securityKey
+          in: query
+          description: Security key for authentication
+          required: true
+          schema:
+            type: string
+        - name: folderId
+          in: query
+          description: The ID of the folder to preview contents
+          required: true
+          schema:
+            type: string
+      deprecated: false
+
+  /exec?operation=createMarkdownFile:
+    post:
+      description: Creates a new markdown file in a specified Google Drive folder.
+      operationId: createMarkdownFile
+      parameters:
+        - name: securityKey
+          in: query
+          description: Security key for authentication
+          required: true
+          schema:
+            type: string
+        - name: folderId
+          in: query
+          description: The ID of the folder where the file should be stored
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Information for creating a new markdown file
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                fileName:
+                  type: string
+                  description: The name of the markdown file (should end with .md)
+                content:
+                  type: string
+                  description: The content to be written into the markdown file
+              required:
+                - fileName
+                - content
+      deprecated: false
+
+  /exec?operation=readMarkdownFile:
+    post:
+      description: Reads the contents of a Markdown file from Google Drive.
+      operationId: readMarkdownFile
+      parameters:
+        - name: securityKey
+          in: query
+          description: Security key for authentication
+          required: true
+          schema:
+            type: string
+        - name: fileId
+          in: query
+          description: The ID of the Markdown file to read
+          required: true
+          schema:
+            type: string
+      deprecated: false
 components:
   schemas: {}

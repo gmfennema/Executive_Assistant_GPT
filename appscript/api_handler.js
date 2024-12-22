@@ -5,6 +5,8 @@ var securityKey = "[YOUR SECURITY KEY]";
 var calendarId = "[YOUR CALENDAR ID OR GMAIL]";
 var timeZone = "PST";
 
+var obsidian_folder = '[YOUR OBSIDIAN FOLDER ID]'
+
 function doGet(e) {
   return handleRequest(e);
 }
@@ -80,6 +82,37 @@ function handleRequest(e) {
         archive = requestBody.archive || null,
         moveToInbox = requestBody.moveToInbox || null
         );
+
+    /* ------- OBSIDIAN FUNCTIONALITY --------*/
+    case "getFolderStructure":
+      return ContentService.createTextOutput(JSON.stringify(
+        getFolderStructure(obsidian_folder)
+      )).setMimeType(ContentService.MimeType.JSON);
+
+    case "fuzzySearchFiles":
+      return ContentService.createTextOutput(JSON.stringify(
+        fuzzySearchFiles(obsidian_folder, e.parameter.searchTerm)
+      )).setMimeType(ContentService.MimeType.JSON);
+
+    case "previewFolderContents":
+      return ContentService.createTextOutput(JSON.stringify(
+        previewFolderContents(obsidian_folder)
+      )).setMimeType(ContentService.MimeType.JSON);
+
+    case "createMarkdownFile":
+      return ContentService.createTextOutput(JSON.stringify(
+        createMarkdownFile(
+          obsidian_folder,
+          requestBody.fileName,
+          requestBody.content
+        )
+      )).setMimeType(ContentService.MimeType.JSON);
+
+    case "readMarkdownFile":
+      return ContentService.createTextOutput(JSON.stringify(
+        readMarkdownFile(e.parameter.fileId)
+      )).setMimeType(ContentService.MimeType.JSON);
+
     default:
       return ContentService.createTextOutput("Invalid operation").setMimeType(
         ContentService.MimeType.TEXT
