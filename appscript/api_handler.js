@@ -5,7 +5,7 @@ var securityKey = "[YOUR SECURITY KEY]";
 var calendarId = "[YOUR CALENDAR ID OR GMAIL]";
 var timeZone = "PST";
 
-var obsidian_folder = '[YOUR OBSIDIAN FOLDER ID]'
+var base_obsidian_folder = '[YOUR OBSIDIAN FOLDER ID]'
 
 function doGet(e) {
   return handleRequest(e);
@@ -86,23 +86,23 @@ function handleRequest(e) {
     /* ------- OBSIDIAN FUNCTIONALITY --------*/
     case "getFolderStructure":
       return ContentService.createTextOutput(JSON.stringify(
-        getFolderStructure(obsidian_folder)
+        getFolderStructure(base_obsidian_folder)
       )).setMimeType(ContentService.MimeType.JSON);
 
     case "fuzzySearchFiles":
       return ContentService.createTextOutput(JSON.stringify(
-        fuzzySearchFiles(obsidian_folder, e.parameter.searchTerm)
+        fuzzySearchFiles(e.parameter.folderId, e.parameter.searchTerm)
       )).setMimeType(ContentService.MimeType.JSON);
 
     case "previewFolderContents":
       return ContentService.createTextOutput(JSON.stringify(
-        previewFolderContents(obsidian_folder)
+        previewFolderContents(e.parameter.folderId)
       )).setMimeType(ContentService.MimeType.JSON);
 
     case "createMarkdownFile":
       return ContentService.createTextOutput(JSON.stringify(
         createMarkdownFile(
-          obsidian_folder,
+          e.parameter.folderId,
           requestBody.fileName,
           requestBody.content
         )

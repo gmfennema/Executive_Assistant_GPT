@@ -3,8 +3,8 @@
  * @param {string} folderId - The folder ID.
  * @return {Object} - Folder structure.
  */
-function getFolderStructure(folderId) {
-    const folder = DriveApp.getFolderById(folderId);
+function getFolderStructure(base_obsidian_folder) {
+    const folder = DriveApp.getFolderById(base_obsidian_folder);
     function fetchStructure(folder) {
       const subfolders = [];
       const subs = folder.getFolders();
@@ -102,7 +102,6 @@ function getFolderStructure(folderId) {
       return { error: `Failed to create markdown file: ${e.message}` };
     }
   }
-  
   
   /**
    * Reads the contents of a Markdown file from Google Drive.
