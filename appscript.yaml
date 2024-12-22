@@ -357,12 +357,6 @@ paths:
           required: true
           schema:
             type: string
-        - name: folderId
-          in: query
-          description: The ID of the folder to fetch structure for
-          required: true
-          schema:
-            type: string
       deprecated: false
 
   /exec?operation=fuzzySearchFiles:
