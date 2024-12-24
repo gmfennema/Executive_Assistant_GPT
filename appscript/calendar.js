@@ -4,14 +4,34 @@ function viewEvents(startDateTime, endDateTime) {
   var calendar = CalendarApp.getCalendarById(calendarId);
   var events = calendar.getEvents(startDate, endDate);
   var eventList = [];
+  
+  // Color lookup key
+  var colorKey = {
+    "1": "PALE_BLUE",
+    "2": "PALE_GREEN",
+    "3": "MAUVE",
+    "4": "PALE_RED",
+    "5": "YELLOW",
+    "6": "ORANGE",
+    "7": "CYAN",
+    "8": "GRAY",
+    "9": "BLUE",
+    "10": "GREEN",
+    "11": "RED"
+  };
+
   for (var i = 0; i < events.length; i++) {
     var event = events[i];
+    var colorNumber = event.getColor();
+    var colorName = colorKey[colorNumber] || "UNKNOWN"; // Default to "UNKNOWN" if not found
+
     eventList.push({
       title: event.getTitle(),
       startTime: event.getStartTime().toLocaleString(timeZone),
       endTime: event.getEndTime().toLocaleString(timeZone),
       description: event.getDescription(),
       id: event.getId(),
+      color: colorName // Added color to the event object
     });
   }
   Logger.log(String(JSON.stringify(eventList)));
@@ -24,12 +44,14 @@ function createEvent(
   endDateTime,
   isAllDay,
   description,
-  invitees
+  invitees,
+  color
 ) {
-  endDateTime = endDateTime || startDateTime;
+  endDateTime = endDateTime || startDateTime; // If endDateTime is not provided, set it to startDateTime
   isAllDay = isAllDay || false;
   description = description || null;
   invitees = invitees || "";
+  color = color || null;
 
   var startDate = stringToDatetime(startDateTime);
   var endDate = stringToDatetime(endDateTime);
@@ -55,6 +77,9 @@ function createEvent(
     );
   }
   if (newEvent) {
+    if (color) {
+      newEvent.setColor(CalendarApp.EventColor[color]);
+    }
     return ContentService.createTextOutput(
       "Event created successfully. ID = " + newEvent.getId()
     ).setMimeType(ContentService.MimeType.TEXT);
@@ -71,7 +96,8 @@ function modifyEvent(
   startDateTime,
   endDateTime,
   description,
-  deleteEvent
+  deleteEvent,
+  color
 ) {
   var calendar = CalendarApp.getCalendarById(calendarId);
   var event = calendar.getEventById(eventId);
@@ -105,6 +131,10 @@ function modifyEvent(
     }
     if (description !== null) {
       event.setDescription(description);
+    }
+
+    if (color !== null) {
+      event.setColor(CalendarApp.EventColor[color]);
     }
 
     return ContentService.createTextOutput(

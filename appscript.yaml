@@ -115,6 +115,13 @@ paths:
           required: true
           schema:
             type: string
+        - name: color
+          in: query
+          description: Color of the calendar event
+          required: false
+          schema:
+            type: string
+            enum: [PALE_BLUE, PALE_GREEN, MAUVE, PALE_RED, YELLOW, ORANGE, CYAN, GRAY, BLUE, GREEN, RED]
       requestBody:
         description: Request body for creating a new event
         required: true
@@ -188,6 +195,13 @@ paths:
           required: true
           schema:
             type: string
+        - name: color
+          in: query
+          description: New color for the calendar event
+          required: false
+          schema:
+            type: string
+            enum: [PALE_BLUE, PALE_GREEN, MAUVE, PALE_RED, YELLOW, ORANGE, CYAN, GRAY, BLUE, GREEN, RED]
       requestBody:
         description: Request body for updating and existing event
         required: true
