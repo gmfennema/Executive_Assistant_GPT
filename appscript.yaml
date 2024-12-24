@@ -17,6 +17,13 @@ paths:
           required: true
           schema:
             type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties: {}
       deprecated: false
   /exec?operation=getPerson:
     get:
@@ -35,6 +42,18 @@ paths:
           required: true
           schema:
             type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: Name of the person to retrieve
+              required:
+                - name
       deprecated: false
   /exec?operation=createProfile:
     post:
@@ -383,18 +402,22 @@ paths:
           required: true
           schema:
             type: string
-        - name: folderId
-          in: query
-          description: The ID of the folder to search in
-          required: true
-          schema:
-            type: string
-        - name: searchTerm
-          in: query
-          description: Search term to find files
-          required: true
-          schema:
-            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                folderId:
+                  type: string
+                  description: The ID of the folder to search in
+                searchTerm:
+                  type: string
+                  description: Search term to find files
+              required:
+                - folderId
+                - searchTerm
       deprecated: false
   /exec?operation=previewObsidianFolder:
     get:

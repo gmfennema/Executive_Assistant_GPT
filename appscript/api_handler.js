@@ -8,12 +8,13 @@ function doPost(e) {
 
 function handleRequest(e) {
   var operation = e.parameter.operation;
-  var providedKey = e.parameter.securityKey; // Get the security key from the request
+  var providedKey = e.parameter.securityKey;
   var requestBody = {};
-  if (e.postData) { // Check if postData is present
+  
+  if (e.postData) {
     requestBody = JSON.parse(e.postData.contents);
   }
-  // Check if the provided security key matches the expected security key
+
   if (providedKey !== securityKey) {
     return ContentService.createTextOutput("Invalid security key").setMimeType(
       ContentService.MimeType.TEXT
@@ -25,40 +26,100 @@ function handleRequest(e) {
     case "getPeople":
       return getPeople();
     case "getPerson":
-      return getPerson(e.parameter.name);
+      return getPerson(requestBody.name);
     case "createProfile":
-      return createProfile(e.parameter.name);
+      return createProfile(requestBody.name);
     case "updateProfile":
       return updateProfile(
-        e.parameter.name,
+        requestBody.name,
         requestBody.value,
         requestBody.path,
         requestBody.updateType
       );
+
+    /* ------- OBSIDIAN FUNCTIONALITY --------*/
+    case "getObsidianVaultStructure":
+      return ContentService.createTextOutput(JSON.stringify(
+        getObsidianVaultStructure(base_obsidian_folder)
+      )).setMimeType(ContentService.MimeType.JSON);
+
+    case "searchObsidianNotes":
+      return ContentService.createTextOutput(JSON.stringify(
+        searchObsidianNotes(requestBody.folderId, requestBody.searchTerm)
+      )).setMimeType(ContentService.MimeType.JSON);
+
+    case "previewObsidianFolder":
+      return ContentService.createTextOutput(JSON.stringify(
+        previewObsidianFolder(requestBody.folderId)
+      )).setMimeType(ContentService.MimeType.JSON);
+
+    case "createObsidianNote":
+      return ContentService.createTextOutput(JSON.stringify(
+        createObsidianNote(
+          requestBody.folderId,
+          requestBody.fileName,
+          requestBody.content
+        )
+      )).setMimeType(ContentService.MimeType.JSON);
+
+    case "readObsidianNote":
+      return ContentService.createTextOutput(JSON.stringify(
+        readObsidianNote(requestBody.fileId)
+      )).setMimeType(ContentService.MimeType.JSON);
+
+    case "createObsidianFolder":
+      return ContentService.createTextOutput(JSON.stringify(
+        createObsidianFolder(
+          requestBody.parentFolderId,
+          requestBody.folderName
+        )
+      )).setMimeType(ContentService.MimeType.JSON);
+
+    case "moveObsidianItem":
+      return ContentService.createTextOutput(JSON.stringify(
+        moveObsidianItem(
+          requestBody.itemId,
+          requestBody.destinationFolderId,
+          requestBody.isFolder
+        )
+      )).setMimeType(ContentService.MimeType.JSON);
+
+    case "deleteObsidianNote":
+      return ContentService.createTextOutput(JSON.stringify(
+        deleteObsidianNote(requestBody.fileId)
+      )).setMimeType(ContentService.MimeType.JSON);
 
     /* ------- GOOGLE CALENDAR FUNCTIONALITY --------*/
     case "viewEvents":
       return viewEvents(requestBody.startDateTime, requestBody.endDateTime);
     case "createEvent":
       return createEvent(
-        title=requestBody.title || null,
-        startDateTime=requestBody.startDateTime || null,
-        endDateTime=requestBody.endDateTime || null,
-        isAllDay=requestBody.isAllDay || false,
-        description=requestBody.description || null,
-        invitees=requestBody.invitees || null,
-        color=requestBody.color || null
+        requestBody.title,
+        requestBody.startDateTime,
+        requestBody.endDateTime,
+        {
+          description: requestBody.description,
+          location: requestBody.location,
+          guests: requestBody.invitees,
+          sendInvites: requestBody.sendInvites || false,
+          color: requestBody.color,
+          ...(requestBody.isAllDay && { allDay: true })
+        }
       );
     case "modifyEvent":
       return modifyEvent(
         requestBody.eventId,
-        title = requestBody.title || null,
-        startDateTime = requestBody.startDateTime || null,
-        endDateTime = requestBody.endDateTime || null,
-        isAllDay = requestBody.isAllDay || false,
-        description = requestBody.description || null,
-        deleteEvent = requestBody.deleteEvent || false,
-        color=requestBody.color || null
+        requestBody.title,
+        requestBody.startDateTime,
+        requestBody.endDateTime,
+        {
+          description: requestBody.description,
+          location: requestBody.location,
+          guests: requestBody.invitees,
+          sendInvites: requestBody.sendInvites || false,
+          color: requestBody.color,
+          deleteEvent: requestBody.deleteEvent || false
+        }
       );
 
     /* ------- GMAIL FUNCTIONALITY --------*/
@@ -75,58 +136,6 @@ function handleRequest(e) {
         archive = requestBody.archive || null,
         moveToInbox = requestBody.moveToInbox || null
         );
-
-    /* ------- OBSIDIAN FUNCTIONALITY --------*/
-    case "getObsidianVaultStructure":
-      return ContentService.createTextOutput(JSON.stringify(
-        getObsidianVaultStructure(base_obsidian_folder)
-      )).setMimeType(ContentService.MimeType.JSON);
-
-    case "searchObsidianNotes":
-      return ContentService.createTextOutput(JSON.stringify(
-        searchObsidianNotes(e.parameter.folderId, e.parameter.searchTerm)
-      )).setMimeType(ContentService.MimeType.JSON);
-
-    case "previewObsidianFolder":
-      return ContentService.createTextOutput(JSON.stringify(
-        previewObsidianFolder(e.parameter.folderId)
-      )).setMimeType(ContentService.MimeType.JSON);
-
-    case "createObsidianNote":
-      return ContentService.createTextOutput(JSON.stringify(
-        createObsidianNote(
-          e.parameter.folderId,
-          requestBody.fileName,
-          requestBody.content
-        )
-      )).setMimeType(ContentService.MimeType.JSON);
-
-    case "readObsidianNote":
-      return ContentService.createTextOutput(JSON.stringify(
-        readObsidianNote(e.parameter.fileId)
-      )).setMimeType(ContentService.MimeType.JSON);
-
-    case "createObsidianFolder":
-      return ContentService.createTextOutput(JSON.stringify(
-        createObsidianFolder(
-          e.parameter.parentFolderId,
-          requestBody.folderName
-        )
-      )).setMimeType(ContentService.MimeType.JSON);
-
-    case "moveObsidianItem":
-      return ContentService.createTextOutput(JSON.stringify(
-        moveObsidianItem(
-          e.parameter.itemId,
-          e.parameter.destinationFolderId,
-          requestBody.isFolder
-        )
-      )).setMimeType(ContentService.MimeType.JSON);
-
-    case "deleteObsidianNote":
-      return ContentService.createTextOutput(JSON.stringify(
-        deleteObsidianNote(e.parameter.fileId)
-      )).setMimeType(ContentService.MimeType.JSON);
 
     default:
       return ContentService.createTextOutput("Invalid operation").setMimeType(
