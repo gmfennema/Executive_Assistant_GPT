@@ -75,33 +75,33 @@ function handleRequest(e) {
         );
 
     /* ------- OBSIDIAN FUNCTIONALITY --------*/
-    case "getFolderStructure":
+    case "getObsidianVaultStructure":
       return ContentService.createTextOutput(JSON.stringify(
-        getFolderStructure(base_obsidian_folder)
+        getObsidianVaultStructure(base_obsidian_folder)
       )).setMimeType(ContentService.MimeType.JSON);
 
-    case "fuzzySearchFiles":
+    case "searchObsidianNotes":
       return ContentService.createTextOutput(JSON.stringify(
-        fuzzySearchFiles(e.parameter.folderId, e.parameter.searchTerm)
+        searchObsidianNotes(e.parameter.folderId, e.parameter.searchTerm)
       )).setMimeType(ContentService.MimeType.JSON);
 
-    case "previewFolderContents":
+    case "previewObsidianFolder":
       return ContentService.createTextOutput(JSON.stringify(
-        previewFolderContents(e.parameter.folderId)
+        previewObsidianFolder(e.parameter.folderId)
       )).setMimeType(ContentService.MimeType.JSON);
 
-    case "createMarkdownFile":
+    case "createObsidianNote":
       return ContentService.createTextOutput(JSON.stringify(
-        createMarkdownFile(
+        createObsidianNote(
           e.parameter.folderId,
           requestBody.fileName,
           requestBody.content
         )
       )).setMimeType(ContentService.MimeType.JSON);
 
-    case "readMarkdownFile":
+    case "readObsidianNote":
       return ContentService.createTextOutput(JSON.stringify(
-        readMarkdownFile(e.parameter.fileId)
+        readObsidianNote(e.parameter.fileId)
       )).setMimeType(ContentService.MimeType.JSON);
 
     default:

@@ -3,7 +3,7 @@
  * @param {string} folderId - The folder ID.
  * @return {Object} - Folder structure.
  */
-function getFolderStructure(base_obsidian_folder) {
+function getObsidianVaultStructure(base_obsidian_folder) {
     const folder = DriveApp.getFolderById(base_obsidian_folder);
     function fetchStructure(folder) {
       const subfolders = [];
@@ -20,7 +20,7 @@ function getFolderStructure(base_obsidian_folder) {
    * @param {string} searchTerm - Search term.
    * @return {Array} - Array of file paths or an error message.
    */
-  function fuzzySearchFiles(folderId, searchTerm) {
+  function searchObsidianNotes(folderId, searchTerm) {
     const folder = DriveApp.getFolderById(folderId), results = [];
     function search(folder, path) {
       const files = folder.getFiles();
@@ -44,7 +44,7 @@ function getFolderStructure(base_obsidian_folder) {
    * @param {string} folderId - The ID of the Google Drive folder.
    * @return {Array} - Array of objects representing the first 10 files.
    */
-  function previewFolderContents(folderId) {
+  function previewObsidianFolder(folderId) {
     const folder = DriveApp.getFolderById(folderId);
     const files = folder.getFiles();
     const fileList = [];
@@ -71,7 +71,7 @@ function getFolderStructure(base_obsidian_folder) {
    * @param {string} content - The content to be written into the markdown file.
    * @return {Object} - Information about the created file or an error message.
    */
-  function createMarkdownFile(folderId, fileName, content) {
+  function createObsidianNote(folderId, fileName, content) {
     try {
       // Validate file extension
       if (!fileName.endsWith('.md')) {
@@ -108,7 +108,7 @@ function getFolderStructure(base_obsidian_folder) {
    * @param {string} fileId - The ID of the Markdown file to read.
    * @return {Object} - The file contents or an error message.
    */
-  function readMarkdownFile(fileId) {
+  function readObsidianNote(fileId) {
     try {
       // Get the file by its ID
       const file = DriveApp.getFileById(fileId);
