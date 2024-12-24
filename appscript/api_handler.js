@@ -1,12 +1,3 @@
-//Required for all functionality
-var securityKey = "[YOUR SECURITY KEY]";
-
-//For Google Calendar Functionaily
-var calendarId = "[YOUR CALENDAR ID OR GMAIL]";
-var timeZone = "PST";
-
-var base_obsidian_folder = '[YOUR OBSIDIAN FOLDER ID]'
-
 function doGet(e) {
   return handleRequest(e);
 }
