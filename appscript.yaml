@@ -453,5 +453,91 @@ paths:
           schema:
             type: string
       deprecated: false
+  /exec?operation=createObsidianFolder:
+    post:
+      description: Creates a new folder within your Obsidian vault structure in Google Drive.
+      operationId: createObsidianFolder
+      parameters:
+        - name: securityKey
+          in: query
+          description: Security key for authentication
+          required: true
+          schema:
+            type: string
+        - name: parentFolderId
+          in: query
+          description: The ID of the parent folder where the new folder should be created
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Information for creating a new folder
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                folderName:
+                  type: string
+                  description: The name of the new folder
+              required:
+                - folderName
+      deprecated: false
+  /exec?operation=moveObsidianItem:
+    post:
+      description: Moves a file or folder to a new location within your Obsidian vault in Google Drive.
+      operationId: moveObsidianItem
+      parameters:
+        - name: securityKey
+          in: query
+          description: Security key for authentication
+          required: true
+          schema:
+            type: string
+        - name: itemId
+          in: query
+          description: The ID of the file or folder to move
+          required: true
+          schema:
+            type: string
+        - name: destinationFolderId
+          in: query
+          description: The ID of the destination folder
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Information about the item being moved
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                isFolder:
+                  type: boolean
+                  description: Whether the item to move is a folder (true) or file (false)
+              required:
+                - isFolder
+      deprecated: false
+  /exec?operation=deleteObsidianNote:
+    post:
+      description: Deletes a specific markdown note from your Obsidian vault in Google Drive.
+      operationId: deleteObsidianNote
+      parameters:
+        - name: securityKey
+          in: query
+          description: Security key for authentication
+          required: true
+          schema:
+            type: string
+        - name: fileId
+          in: query
+          description: The ID of the markdown note to delete
+          required: true
+          schema:
+            type: string
+      deprecated: false
 components:
   schemas: {}

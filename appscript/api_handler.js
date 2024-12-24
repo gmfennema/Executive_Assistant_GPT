@@ -104,6 +104,28 @@ function handleRequest(e) {
         readObsidianNote(e.parameter.fileId)
       )).setMimeType(ContentService.MimeType.JSON);
 
+    case "createObsidianFolder":
+      return ContentService.createTextOutput(JSON.stringify(
+        createObsidianFolder(
+          e.parameter.parentFolderId,
+          requestBody.folderName
+        )
+      )).setMimeType(ContentService.MimeType.JSON);
+
+    case "moveObsidianItem":
+      return ContentService.createTextOutput(JSON.stringify(
+        moveObsidianItem(
+          e.parameter.itemId,
+          e.parameter.destinationFolderId,
+          requestBody.isFolder
+        )
+      )).setMimeType(ContentService.MimeType.JSON);
+
+    case "deleteObsidianNote":
+      return ContentService.createTextOutput(JSON.stringify(
+        deleteObsidianNote(e.parameter.fileId)
+      )).setMimeType(ContentService.MimeType.JSON);
+
     default:
       return ContentService.createTextOutput("Invalid operation").setMimeType(
         ContentService.MimeType.TEXT

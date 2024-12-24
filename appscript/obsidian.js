@@ -131,3 +131,85 @@ function getObsidianVaultStructure(base_obsidian_folder) {
     }
   }
   
+  /**
+   * Creates a new folder in the Obsidian vault.
+   * @param {string} parentFolderId - The ID of the parent folder where the new folder should be created.
+   * @param {string} folderName - The name of the new folder.
+   * @return {Object} - Information about the created folder or an error message.
+   */
+  function createObsidianFolder(parentFolderId, folderName) {
+    try {
+      const parentFolder = DriveApp.getFolderById(parentFolderId);
+      const newFolder = parentFolder.createFolder(folderName);
+      
+      return {
+        message: "Folder created successfully",
+        name: newFolder.getName(),
+        id: newFolder.getId()
+      };
+    } catch (e) {
+      return { error: `Failed to create folder: ${e.message}` };
+    }
+  }
+  
+  /**
+   * Moves a file or folder to a new location in the Obsidian vault.
+   * @param {string} itemId - The ID of the file or folder to move.
+   * @param {string} destinationFolderId - The ID of the destination folder.
+   * @param {boolean} isFolder - Whether the item to move is a folder (true) or file (false).
+   * @return {Object} - Status of the move operation.
+   */
+  function moveObsidianItem(itemId, destinationFolderId, isFolder) {
+    try {
+      const destinationFolder = DriveApp.getFolderById(destinationFolderId);
+      
+      if (isFolder) {
+        const folderToMove = DriveApp.getFolderById(itemId);
+        folderToMove.moveTo(destinationFolder);
+        return {
+          message: "Folder moved successfully",
+          name: folderToMove.getName(),
+          id: folderToMove.getId(),
+          newParentId: destinationFolderId
+        };
+      } else {
+        const fileToMove = DriveApp.getFileById(itemId);
+        fileToMove.moveTo(destinationFolder);
+        return {
+          message: "File moved successfully",
+          name: fileToMove.getName(),
+          id: fileToMove.getId(),
+          newParentId: destinationFolderId
+        };
+      }
+    } catch (e) {
+      return { error: `Failed to move item: ${e.message}` };
+    }
+  }
+  
+  /**
+   * Deletes a note from the Obsidian vault.
+   * @param {string} fileId - The ID of the note to delete.
+   * @return {Object} - Status of the deletion operation.
+   */
+  function deleteObsidianNote(fileId) {
+    try {
+      const file = DriveApp.getFileById(fileId);
+      
+      // Verify it's a markdown file
+      if (!file.getName().endsWith('.md')) {
+        return { error: "The specified file is not a markdown note." };
+      }
+
+      const fileName = file.getName();
+      file.setTrashed(true);
+      
+      return {
+        message: "Note deleted successfully",
+        name: fileName
+      };
+    } catch (e) {
+      return { error: `Failed to delete note: ${e.message}` };
+    }
+  }
+  
