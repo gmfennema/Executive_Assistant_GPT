@@ -38,56 +38,56 @@ function viewEvents(startDateTime, endDateTime) {
   return ContentService.createTextOutput(JSON.stringify(eventList));
 }
 
-function createEvent(
-  title,
-  startDateTime,
-  endDateTime,
-  isAllDay,
-  description,
-  invitees,
-  color
-) {
-  endDateTime = endDateTime || startDateTime; // If endDateTime is not provided, set it to startDateTime
-  isAllDay = isAllDay || false;
-  description = description || null;
-  invitees = invitees || "";
-  color = color || null;
+function createEvent(title, startDateTime, endDateTime, options = {}) {
+  const {
+    isAllDay = false,
+    description = null,
+    invitees = "",
+    color = null
+  } = options;
+
+  // Add color mapping
+  const colorMap = {
+    "PALE_BLUE": "1",
+    "PALE_GREEN": "2",
+    "MAUVE": "3",
+    "PALE_RED": "4",
+    "YELLOW": "5",
+    "ORANGE": "6",
+    "CYAN": "7",
+    "GRAY": "8",
+    "BLUE": "9",
+    "GREEN": "10",
+    "RED": "11"
+  };
 
   var startDate = stringToDatetime(startDateTime);
   var endDate = stringToDatetime(endDateTime);
   var calendar = CalendarApp.getCalendarById(calendarId);
-  var inviteesList = invitees ? invitees.join(",") : "";
+  var inviteesList = Array.isArray(invitees) ? invitees.join(",") : invitees;
+  
   var eventOptions = {
     description: description,
     guests: inviteesList,
   };
-  if (isAllDay) {
-    var newEvent = calendar.createAllDayEvent(
-      title,
-      startDate,
-      endDate,
-      eventOptions
-    );
-  } else {
-    var newEvent = calendar.createEvent(
-      title,
-      startDate,
-      endDate,
-      eventOptions
-    );
-  }
+
+  var newEvent = isAllDay 
+    ? calendar.createAllDayEvent(title, startDate, endDate, eventOptions)
+    : calendar.createEvent(title, startDate, endDate, eventOptions);
+
   if (newEvent) {
     if (color) {
-      newEvent.setColor(CalendarApp.EventColor[color]);
+      // Use the numeric color ID instead of the color name
+      newEvent.setColor(colorMap[color]);
     }
     return ContentService.createTextOutput(
       "Event created successfully. ID = " + newEvent.getId()
     ).setMimeType(ContentService.MimeType.TEXT);
-  } else {
-    return ContentService.createTextOutput("Error creating event").setMimeType(
-      ContentService.MimeType.TEXT
-    );
   }
+  
+  return ContentService.createTextOutput("Error creating event").setMimeType(
+    ContentService.MimeType.TEXT
+  );
 }
 
 function modifyEvent(
@@ -99,6 +99,21 @@ function modifyEvent(
   deleteEvent,
   color
 ) {
+  // Add color mapping
+  const colorMap = {
+    "PALE_BLUE": "1",
+    "PALE_GREEN": "2",
+    "MAUVE": "3",
+    "PALE_RED": "4",
+    "YELLOW": "5",
+    "ORANGE": "6",
+    "CYAN": "7",
+    "GRAY": "8",
+    "BLUE": "9",
+    "GREEN": "10",
+    "RED": "11"
+  };
+
   var calendar = CalendarApp.getCalendarById(calendarId);
   var event = calendar.getEventById(eventId);
   if (!event) {
@@ -107,7 +122,7 @@ function modifyEvent(
     );
   }
   if (deleteEvent == true) {
-    event.deleteEvent(); // Delete the event
+    event.deleteEvent();
     return ContentService.createTextOutput(
       "Event deleted successfully"
     ).setMimeType(ContentService.MimeType.TEXT);
@@ -117,7 +132,6 @@ function modifyEvent(
     } else {
       var newStartTime = stringToDatetime(startDateTime);
     }
-    //------//
     if (endDateTime == null) {
       var newEndTime = event.getEndTime();
     } else {
@@ -132,9 +146,8 @@ function modifyEvent(
     if (description !== null) {
       event.setDescription(description);
     }
-
     if (color !== null) {
-      event.setColor(CalendarApp.EventColor[color]);
+      event.setColor(colorMap[color]);
     }
 
     return ContentService.createTextOutput(

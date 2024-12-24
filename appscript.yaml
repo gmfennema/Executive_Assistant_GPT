@@ -30,12 +30,6 @@ paths:
       description: Get a specific person's details
       operationId: getPerson
       parameters:
-        - name: name
-          in: query
-          description: Name of the person to retrieve
-          required: true
-          schema:
-            type: string
         - name: securityKey
           in: query
           description: Security key for authentication
@@ -134,13 +128,6 @@ paths:
           required: true
           schema:
             type: string
-        - name: color
-          in: query
-          description: Color of the calendar event
-          required: false
-          schema:
-            type: string
-            enum: [PALE_BLUE, PALE_GREEN, MAUVE, PALE_RED, YELLOW, ORANGE, CYAN, GRAY, BLUE, GREEN, RED]
       requestBody:
         description: Request body for creating a new event
         required: true
@@ -169,6 +156,10 @@ paths:
                   items:
                     type: string
                   description: Array of email addresses of invitees (optional)
+                color:
+                  type: string
+                  description: Color of the calendar event
+                  enum: [PALE_BLUE, PALE_GREEN, MAUVE, PALE_RED, YELLOW, ORANGE, CYAN, GRAY, BLUE, GREEN, RED]
               required:
                 - title
                 - startDateTime
@@ -214,13 +205,6 @@ paths:
           required: true
           schema:
             type: string
-        - name: color
-          in: query
-          description: New color for the calendar event
-          required: false
-          schema:
-            type: string
-            enum: [PALE_BLUE, PALE_GREEN, MAUVE, PALE_RED, YELLOW, ORANGE, CYAN, GRAY, BLUE, GREEN, RED]
       requestBody:
         description: Request body for updating and existing event
         required: true
@@ -252,6 +236,10 @@ paths:
                 deleteEvent:
                   type: boolean
                   description: If true, deletes the event (optional)
+                color:
+                  type: string
+                  description: New color for the calendar event
+                  enum: [PALE_BLUE, PALE_GREEN, MAUVE, PALE_RED, YELLOW, ORANGE, CYAN, GRAY, BLUE, GREEN, RED]
               required:
                 - eventId
       deprecated: false
@@ -430,12 +418,18 @@ paths:
           required: true
           schema:
             type: string
-        - name: folderId
-          in: query
-          description: The ID of the folder to preview contents
-          required: true
-          schema:
-            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                folderId:
+                  type: string
+                  description: The ID of the folder to preview contents
+              required:
+                - folderId
       deprecated: false
   /exec?operation=createObsidianNote:
     post:
@@ -448,12 +442,6 @@ paths:
           required: true
           schema:
             type: string
-        - name: folderId
-          in: query
-          description: The ID of the folder where the file should be stored
-          required: true
-          schema:
-            type: string
       requestBody:
         description: Information for creating a new markdown file
         required: true
@@ -462,6 +450,9 @@ paths:
             schema:
               type: object
               properties:
+                folderId:
+                  type: string
+                  description: The ID of the folder where the file should be stored
                 fileName:
                   type: string
                   description: The name of the markdown file (should end with .md)
@@ -469,6 +460,7 @@ paths:
                   type: string
                   description: The content to be written into the markdown file
               required:
+                - folderId
                 - fileName
                 - content
       deprecated: false
@@ -483,12 +475,18 @@ paths:
           required: true
           schema:
             type: string
-        - name: fileId
-          in: query
-          description: The ID of the Markdown file to read
-          required: true
-          schema:
-            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                fileId:
+                  type: string
+                  description: The ID of the Markdown file to read
+              required:
+                - fileId
       deprecated: false
   /exec?operation=createObsidianFolder:
     post:
@@ -501,12 +499,6 @@ paths:
           required: true
           schema:
             type: string
-        - name: parentFolderId
-          in: query
-          description: The ID of the parent folder where the new folder should be created
-          required: true
-          schema:
-            type: string
       requestBody:
         description: Information for creating a new folder
         required: true
@@ -515,10 +507,14 @@ paths:
             schema:
               type: object
               properties:
+                parentFolderId:
+                  type: string
+                  description: The ID of the parent folder where the new folder should be created
                 folderName:
                   type: string
                   description: The name of the new folder
               required:
+                - parentFolderId
                 - folderName
       deprecated: false
   /exec?operation=moveObsidianItem:
@@ -532,18 +528,6 @@ paths:
           required: true
           schema:
             type: string
-        - name: itemId
-          in: query
-          description: The ID of the file or folder to move
-          required: true
-          schema:
-            type: string
-        - name: destinationFolderId
-          in: query
-          description: The ID of the destination folder
-          required: true
-          schema:
-            type: string
       requestBody:
         description: Information about the item being moved
         required: true
@@ -552,10 +536,18 @@ paths:
             schema:
               type: object
               properties:
+                itemId:
+                  type: string
+                  description: The ID of the file or folder to move
+                destinationFolderId:
+                  type: string
+                  description: The ID of the destination folder
                 isFolder:
                   type: boolean
                   description: Whether the item to move is a folder (true) or file (false)
               required:
+                - itemId
+                - destinationFolderId
                 - isFolder
       deprecated: false
   /exec?operation=deleteObsidianNote:
@@ -569,12 +561,18 @@ paths:
           required: true
           schema:
             type: string
-        - name: fileId
-          in: query
-          description: The ID of the markdown note to delete
-          required: true
-          schema:
-            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                fileId:
+                  type: string
+                  description: The ID of the markdown note to delete
+              required:
+                - fileId
       deprecated: false
 components:
   schemas: {}

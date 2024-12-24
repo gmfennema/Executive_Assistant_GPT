@@ -98,12 +98,10 @@ function handleRequest(e) {
         requestBody.startDateTime,
         requestBody.endDateTime,
         {
+          isAllDay: requestBody.isAllDay || false,
           description: requestBody.description,
-          location: requestBody.location,
-          guests: requestBody.invitees,
-          sendInvites: requestBody.sendInvites || false,
-          color: requestBody.color,
-          ...(requestBody.isAllDay && { allDay: true })
+          invitees: requestBody.invitees,
+          color: requestBody.color
         }
       );
     case "modifyEvent":
