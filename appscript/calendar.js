@@ -42,24 +42,8 @@ function createEvent(title, startDateTime, endDateTime, options = {}) {
   const {
     isAllDay = false,
     description = null,
-    invitees = "",
-    color = null
+    invitees = ""
   } = options;
-
-  // Add color mapping
-  const colorMap = {
-    "PALE_BLUE": "1",
-    "PALE_GREEN": "2",
-    "MAUVE": "3",
-    "PALE_RED": "4",
-    "YELLOW": "5",
-    "ORANGE": "6",
-    "CYAN": "7",
-    "GRAY": "8",
-    "BLUE": "9",
-    "GREEN": "10",
-    "RED": "11"
-  };
 
   var startDate = stringToDatetime(startDateTime);
   var endDate = stringToDatetime(endDateTime);
@@ -76,10 +60,6 @@ function createEvent(title, startDateTime, endDateTime, options = {}) {
     : calendar.createEvent(title, startDate, endDate, eventOptions);
 
   if (newEvent) {
-    if (color) {
-      // Use the numeric color ID instead of the color name
-      newEvent.setColor(colorMap[color]);
-    }
     return ContentService.createTextOutput(
       "Event created successfully. ID = " + newEvent.getId()
     ).setMimeType(ContentService.MimeType.TEXT);
@@ -96,24 +76,8 @@ function modifyEvent(
   startDateTime,
   endDateTime,
   description,
-  deleteEvent,
-  color
+  deleteEvent
 ) {
-  // Add color mapping
-  const colorMap = {
-    "PALE_BLUE": "1",
-    "PALE_GREEN": "2",
-    "MAUVE": "3",
-    "PALE_RED": "4",
-    "YELLOW": "5",
-    "ORANGE": "6",
-    "CYAN": "7",
-    "GRAY": "8",
-    "BLUE": "9",
-    "GREEN": "10",
-    "RED": "11"
-  };
-
   var calendar = CalendarApp.getCalendarById(calendarId);
   var event = calendar.getEventById(eventId);
   if (!event) {
@@ -145,9 +109,6 @@ function modifyEvent(
     }
     if (description !== null) {
       event.setDescription(description);
-    }
-    if (color !== null) {
-      event.setColor(colorMap[color]);
     }
 
     return ContentService.createTextOutput(

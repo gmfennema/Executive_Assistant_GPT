@@ -156,10 +156,6 @@ paths:
                   items:
                     type: string
                   description: Array of email addresses of invitees (optional)
-                color:
-                  type: string
-                  description: Color of the calendar event
-                  enum: [PALE_BLUE, PALE_GREEN, MAUVE, PALE_RED, YELLOW, ORANGE, CYAN, GRAY, BLUE, GREEN, RED]
               required:
                 - title
                 - startDateTime
@@ -236,10 +232,6 @@ paths:
                 deleteEvent:
                   type: boolean
                   description: If true, deletes the event (optional)
-                color:
-                  type: string
-                  description: New color for the calendar event
-                  enum: [PALE_BLUE, PALE_GREEN, MAUVE, PALE_RED, YELLOW, ORANGE, CYAN, GRAY, BLUE, GREEN, RED]
               required:
                 - eventId
       deprecated: false

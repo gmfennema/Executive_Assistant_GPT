@@ -100,8 +100,7 @@ function handleRequest(e) {
         {
           isAllDay: requestBody.isAllDay || false,
           description: requestBody.description,
-          invitees: requestBody.invitees,
-          color: requestBody.color
+          invitees: requestBody.invitees
         }
       );
     case "modifyEvent":
@@ -110,14 +109,8 @@ function handleRequest(e) {
         requestBody.title,
         requestBody.startDateTime,
         requestBody.endDateTime,
-        {
-          description: requestBody.description,
-          location: requestBody.location,
-          guests: requestBody.invitees,
-          sendInvites: requestBody.sendInvites || false,
-          color: requestBody.color,
-          deleteEvent: requestBody.deleteEvent || false
-        }
+        requestBody.description,
+        requestBody.deleteEvent || false
       );
 
     /* ------- GMAIL FUNCTIONALITY --------*/
