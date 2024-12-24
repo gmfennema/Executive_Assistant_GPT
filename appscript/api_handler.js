@@ -46,7 +46,8 @@ function handleRequest(e) {
         endDateTime=requestBody.endDateTime || null,
         isAllDay=requestBody.isAllDay || false,
         description=requestBody.description || null,
-        invitees=requestBody.invitees || null
+        invitees=requestBody.invitees || null,
+        color=requestBody.color || null
       );
     case "modifyEvent":
       return modifyEvent(
@@ -56,7 +57,8 @@ function handleRequest(e) {
         endDateTime = requestBody.endDateTime || null,
         isAllDay = requestBody.isAllDay || false,
         description = requestBody.description || null,
-        deleteEvent = requestBody.deleteEvent || false
+        deleteEvent = requestBody.deleteEvent || false,
+        color=requestBody.color || null
       );
 
     /* ------- GMAIL FUNCTIONALITY --------*/
