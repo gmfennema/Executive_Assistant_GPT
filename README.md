@@ -1,7 +1,7 @@
 # Google Workspace Executive Assistant GPT
 This project gives a custom GPT the ability to interact with your Google Workspace Apps, essentially functioning as your executive assistant. It can currently do the following upon user request:
 
-<img src="https://github.com/gmfennema/Executive_Assistant_GPT/assets/38080470/3f645195-b577-4e3d-9600-797f68aa816e" style="width: 600px" >
+<img src="https://github.com/gmfennema/Executive_Assistant_GPT/blob/main/assets/overview_image.png" style="width: 600px" >
 
 
 ## Current Functionality
@@ -16,11 +16,24 @@ This project gives a custom GPT the ability to interact with your Google Workspa
   - Create new events
   - Update existing events
 
+**Google Tasks**:
+  - View all task lists
+  - Create and manage task lists
+  - Add, update, and complete tasks
+  - Move tasks between lists
+  - Set due dates and add notes
+
 **Personal CRM (Google Sheets)**:
   - View all contacts
   - Read profile details
   - Create new profiles
   - Update profiles
+
+**Obsidian (Google Drive)**:
+  - Browse vault structure
+  - Search and preview notes
+  - Create and edit markdown files
+  - Organize folders and notes
 
 ## Example Use Cases
 
@@ -30,19 +43,30 @@ This project gives a custom GPT the ability to interact with your Google Workspa
     - Create 5-minute time slots on my calendar starting at 4 pm to respond to anything that requires a response.
     - Link those emails in the event descriptions and then archive them
 
-2) Remember Anything
-    - Tom's birthday is April 20th
-    - Update his CRM profile
-    - Add it as an all-day event to my calendar
+2) Task Management
+    - Create a new task list called "Project Alpha"
+    - Add three tasks due this week: "Research competitors", "Draft proposal", and "Schedule team meeting"
+    - Move all completed tasks from "Personal" to "Archive" list
+    - Show me all tasks due in the next 7 days
 
-3) Extract Key Details
-    - Read Tom's Christmas update email he sent 1 month ago
-    - Extract all personal details
-    - Update his CRM profile with relevant information
+3) Knowledge Management
+    - Create a new note in my Obsidian vault about the meeting with Tom
+    - Search for all notes related to "project planning"
+    - Move my project notes to the "Archive/2024" folder
+    - Update Tom's CRM profile with the new information from our meeting
 
-4) Speedy Response
-    - Summarize the long email chain from Tom
-    - Draft an encouraging response and give me the link
+4) Calendar Organization
+    - Show me my schedule for next week
+    - Create recurring team meetings every Tuesday at 10 AM
+    - Block out focus time for deep work every morning
+    - Add reminders for upcoming task deadlines
+
+5) Integrated Workflows
+    - Read Tom's latest email about the project
+    - Create tasks for all action items
+    - Schedule a follow-up meeting
+    - Update the project notes in Obsidian
+    - Add key details to Tom's CRM profile
 
 ## Install Instructions
 
