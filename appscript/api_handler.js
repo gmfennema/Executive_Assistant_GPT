@@ -144,6 +144,17 @@ function handleRequest(e) {
     case "createTask":
       return createTask(requestBody);
 
+    case "markTaskAsComplete":
+      return markTaskAsComplete(requestBody);
+    case "updateTaskDetails":
+      return updateTaskDetails(requestBody);
+    case "deleteTask":
+      return deleteTask(requestBody);
+    case "deleteTaskList":
+      return deleteTaskList(requestBody.taskListId);
+    case "moveTask":
+      return moveTask(requestBody);
+
     default:
       return ContentService.createTextOutput("Invalid operation").setMimeType(
         ContentService.MimeType.TEXT

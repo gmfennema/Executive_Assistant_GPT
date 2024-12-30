@@ -673,5 +673,163 @@ paths:
               required:
                 - title
       deprecated: false
+  /exec?operation=markTaskAsComplete:
+    post:
+      description: Marks a task as complete or incomplete
+      operationId: markTaskAsComplete
+      parameters:
+        - name: securityKey
+          in: query
+          description: Security key for authentication
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Task completion details
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                taskId:
+                  type: string
+                  description: ID of the task
+                taskListId:
+                  type: string
+                  description: ID of the task list
+                completed:
+                  type: boolean
+                  description: Whether to mark the task as completed (true) or not (false)
+              required:
+                - taskId
+                - taskListId
+                - completed
+      deprecated: false
+  /exec?operation=updateTaskDetails:
+    post:
+      description: Updates task details
+      operationId: updateTaskDetails
+      parameters:
+        - name: securityKey
+          in: query
+          description: Security key for authentication
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Updated task details
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                taskId:
+                  type: string
+                  description: ID of the task
+                taskListId:
+                  type: string
+                  description: ID of the task list
+                title:
+                  type: string
+                  description: Updated title (optional)
+                notes:
+                  type: string
+                  description: Updated notes (optional)
+                due:
+                  type: string
+                  description: Updated due date in 'MMMM D, YYYY HH:mm:ss' format (optional)
+              required:
+                - taskId
+                - taskListId
+      deprecated: false
+  /exec?operation=deleteTask:
+    post:
+      description: Deletes a specific task
+      operationId: deleteTask
+      parameters:
+        - name: securityKey
+          in: query
+          description: Security key for authentication
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Task to delete
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                taskId:
+                  type: string
+                  description: ID of the task to delete
+                taskListId:
+                  type: string
+                  description: ID of the task list
+              required:
+                - taskId
+                - taskListId
+      deprecated: false
+  /exec?operation=deleteTaskList:
+    post:
+      description: Deletes an entire task list
+      operationId: deleteTaskList
+      parameters:
+        - name: securityKey
+          in: query
+          description: Security key for authentication
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Task list to delete
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                taskListId:
+                  type: string
+                  description: ID of the task list to delete
+              required:
+                - taskListId
+      deprecated: false
+  /exec?operation=moveTask:
+    post:
+      description: Moves a task to a different task list
+      operationId: moveTask
+      parameters:
+        - name: securityKey
+          in: query
+          description: Security key for authentication
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Task move details
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                taskId:
+                  type: string
+                  description: ID of the task to move
+                sourceTaskListId:
+                  type: string
+                  description: ID of the current task list
+                destinationTaskListId:
+                  type: string
+                  description: ID of the destination task list
+              required:
+                - taskId
+                - sourceTaskListId
+                - destinationTaskListId
+      deprecated: false
 components:
   schemas: {}

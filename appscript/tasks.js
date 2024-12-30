@@ -270,3 +270,173 @@ function getDefaultDateRange() {
     endDateTime: end
   };
 }
+
+/**
+ * Marks a task as complete or incomplete
+ * @param {Object} params - Parameters containing taskId and taskListId
+ * @returns {Object} JSON response with updated task
+ */
+function markTaskAsComplete(params) {
+  try {
+    if (!params.taskId || !params.taskListId) {
+      throw new Error('Task ID and Task List ID are required');
+    }
+
+    const task = Tasks.Tasks.get(params.taskListId, params.taskId);
+    task.status = params.completed ? 'completed' : 'needsAction';
+    
+    const updatedTask = Tasks.Tasks.update(task, params.taskListId, params.taskId);
+
+    return ContentService.createTextOutput(JSON.stringify({
+      success: true,
+      task: {
+        id: updatedTask.id,
+        title: updatedTask.title,
+        status: updatedTask.status,
+        taskListId: params.taskListId
+      }
+    })).setMimeType(ContentService.MimeType.JSON);
+
+  } catch (error) {
+    return ContentService.createTextOutput(JSON.stringify({
+      success: false,
+      error: error.message
+    })).setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+/**
+ * Updates task details
+ * @param {Object} params - Parameters containing task details to update
+ * @returns {Object} JSON response with updated task
+ */
+function updateTaskDetails(params) {
+  try {
+    if (!params.taskId || !params.taskListId) {
+      throw new Error('Task ID and Task List ID are required');
+    }
+
+    const task = Tasks.Tasks.get(params.taskListId, params.taskId);
+    
+    // Update allowed fields if provided
+    if (params.title) task.title = params.title;
+    if (params.notes) task.notes = params.notes;
+    if (params.due) {
+      const dueDate = new Date(params.due);
+      task.due = dueDate.toISOString();
+    }
+
+    const updatedTask = Tasks.Tasks.update(task, params.taskListId, params.taskId);
+
+    return ContentService.createTextOutput(JSON.stringify({
+      success: true,
+      task: {
+        id: updatedTask.id,
+        title: updatedTask.title,
+        notes: updatedTask.notes,
+        due: updatedTask.due,
+        status: updatedTask.status,
+        taskListId: params.taskListId
+      }
+    })).setMimeType(ContentService.MimeType.JSON);
+
+  } catch (error) {
+    return ContentService.createTextOutput(JSON.stringify({
+      success: false,
+      error: error.message
+    })).setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+/**
+ * Deletes a task
+ * @param {Object} params - Parameters containing taskId and taskListId
+ * @returns {Object} JSON response confirming deletion
+ */
+function deleteTask(params) {
+  try {
+    if (!params.taskId || !params.taskListId) {
+      throw new Error('Task ID and Task List ID are required');
+    }
+
+    Tasks.Tasks.remove(params.taskListId, params.taskId);
+
+    return ContentService.createTextOutput(JSON.stringify({
+      success: true,
+      message: 'Task deleted successfully'
+    })).setMimeType(ContentService.MimeType.JSON);
+
+  } catch (error) {
+    return ContentService.createTextOutput(JSON.stringify({
+      success: false,
+      error: error.message
+    })).setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+/**
+ * Deletes a task list
+ * @param {string} taskListId - ID of the task list to delete
+ * @returns {Object} JSON response confirming deletion
+ */
+function deleteTaskList(taskListId) {
+  try {
+    if (!taskListId) {
+      throw new Error('Task List ID is required');
+    }
+
+    Tasks.Tasklists.remove(taskListId);
+
+    return ContentService.createTextOutput(JSON.stringify({
+      success: true,
+      message: 'Task list deleted successfully'
+    })).setMimeType(ContentService.MimeType.JSON);
+
+  } catch (error) {
+    return ContentService.createTextOutput(JSON.stringify({
+      success: false,
+      error: error.message
+    })).setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+/**
+ * Moves a task to a different task list
+ * @param {Object} params - Parameters containing taskId, sourceTaskListId, and destinationTaskListId
+ * @returns {Object} JSON response with moved task
+ */
+function moveTask(params) {
+  try {
+    if (!params.taskId || !params.sourceTaskListId || !params.destinationTaskListId) {
+      throw new Error('Task ID, source Task List ID, and destination Task List ID are required');
+    }
+
+    const task = Tasks.Tasks.get(params.sourceTaskListId, params.taskId);
+    Tasks.Tasks.remove(params.sourceTaskListId, params.taskId);
+    
+    const movedTask = Tasks.Tasks.insert({
+      title: task.title,
+      notes: task.notes,
+      due: task.due,
+      status: task.status
+    }, params.destinationTaskListId);
+
+    return ContentService.createTextOutput(JSON.stringify({
+      success: true,
+      task: {
+        id: movedTask.id,
+        title: movedTask.title,
+        notes: movedTask.notes,
+        due: movedTask.due,
+        status: movedTask.status,
+        taskListId: params.destinationTaskListId
+      }
+    })).setMimeType(ContentService.MimeType.JSON);
+
+  } catch (error) {
+    return ContentService.createTextOutput(JSON.stringify({
+      success: false,
+      error: error.message
+    })).setMimeType(ContentService.MimeType.JSON);
+  }
+}
