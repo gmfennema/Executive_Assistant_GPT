@@ -566,5 +566,112 @@ paths:
               required:
                 - fileId
       deprecated: false
+  /exec?operation=getTasks:
+    post:
+      description: Get tasks from specified task lists within a date range
+      operationId: getTasks
+      parameters:
+        - name: securityKey
+          in: query
+          description: Security key for authentication
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Optional parameters for filtering tasks
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                startDateTime:
+                  type: string
+                  description: Start date in 'MMMM D, YYYY HH:mm:ss' format (defaults to today)
+                endDateTime:
+                  type: string
+                  description: End date in 'MMMM D, YYYY HH:mm:ss' format (defaults to 7 days from today)
+                taskListIds:
+                  type: array
+                  items:
+                    type: string
+                  description: Optional array of specific task list IDs to check
+      deprecated: false
+  /exec?operation=createTask:
+    post:
+      description: Creates a new task in the specified task list
+      operationId: createTask
+      parameters:
+        - name: securityKey
+          in: query
+          description: Security key for authentication
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Details for the new task
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  description: Title of the task
+                notes:
+                  type: string
+                  description: Optional notes for the task
+                due:
+                  type: string
+                  description: Due date in 'MMMM D, YYYY HH:mm:ss' format
+                taskListId:
+                  type: string
+                  description: ID of the task list to create the task in
+                status:
+                  type: string
+                  description: Status of the task (defaults to 'needsAction')
+                  enum: [needsAction, completed]
+              required:
+                - title
+                - taskListId
+      deprecated: false
+  /exec?operation=getTaskLists:
+    get:
+      description: Get all available task lists
+      operationId: getTaskLists
+      parameters:
+        - name: securityKey
+          in: query
+          description: Security key for authentication
+          required: true
+          schema:
+            type: string
+      deprecated: false
+  /exec?operation=createTaskList:
+    post:
+      description: Creates a new task list
+      operationId: createTaskList
+      parameters:
+        - name: securityKey
+          in: query
+          description: Security key for authentication
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Details for the new task list
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  description: Title of the new task list
+              required:
+                - title
+      deprecated: false
 components:
   schemas: {}

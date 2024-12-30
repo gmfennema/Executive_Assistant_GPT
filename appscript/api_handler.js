@@ -128,6 +128,22 @@ function handleRequest(e) {
         moveToInbox = requestBody.moveToInbox || null
         );
 
+    /* ------- GOOGLE TASKS FUNCTIONALITY --------*/
+    case "getTaskLists":
+      return getTaskLists();
+    case "createTaskList":
+      return createTaskList(requestBody.title);
+    case "getTasks":
+      const dateRange = getDefaultDateRange();
+      const taskListIds = (requestBody && requestBody.taskListIds) || (e.parameter && e.parameter.taskListIds);
+      return getTasks(
+        (requestBody && requestBody.startDateTime) || dateRange.startDateTime,
+        (requestBody && requestBody.endDateTime) || dateRange.endDateTime,
+        taskListIds
+      );
+    case "createTask":
+      return createTask(requestBody);
+
     default:
       return ContentService.createTextOutput("Invalid operation").setMimeType(
         ContentService.MimeType.TEXT
